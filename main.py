@@ -53,5 +53,3 @@ async def validate_plates(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=f"ფაილის დამუშავების შეცდომა: {str(e)}")
 
 
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)

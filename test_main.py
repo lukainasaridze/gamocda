@@ -1,5 +1,5 @@
 import pytest
-from main import is_valid  # შეცვალე თუ საჭირო
+from main import is_valid 
 
 def test_valid_plate():
     assert is_valid("AB-123-CD") == True
