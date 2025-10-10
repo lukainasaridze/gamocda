@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
@@ -9,7 +9,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
 
@@ -22,14 +21,25 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        pip install pytest  # ტესტებისთვის
+        pip install pytest flake8
 
     - name: Lint with flake8
       run: |
-        pip install flake8
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # ეს შეამოწმებს კოდის სტილს
 
     - name: Run tests
       run: |
-        pytest  # თუ ტესტები გაქვს; ჯერ უბრალოდ pass იქნება
+        pytest
+
+  deploy:
+    needs: test  # მხოლოდ თუ ტესტები გაიარა
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'  # მხოლოდ main-ზე push
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Deploy to Render
+      uses: johnbeynon/render-deploy-action@v0.0.8
+      with:
+        service-id: ${{ secrets.RENDER_SERVICE_ID }}
+        api-key: ${{ secrets.RENDER_API_KEY }}
