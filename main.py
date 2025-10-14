@@ -40,7 +40,7 @@ async def validate_plates(file: UploadFile = File(...)):
         for row in reader:
             if row:  
                 plate = row[0].strip()
-                status = 'Valid' if is_valid(plate) else 'Invalid'
+                status = 'Valid' if not is_valid(plate) else 'Invalid'
                 writer.writerow([plate, status])
         
         output.seek(0)
